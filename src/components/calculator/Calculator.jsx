@@ -5,14 +5,18 @@ import Display from '../display/Display'
 import './Calculator.css'
 
 function Calculator() {
-  const [value, setValue] = useState(['0'])
+  const [value, setValue] = useState('0')
+  const [oldValue, setOldValue] = useState('0')
+  const [operator, setOperator] = useState()
 
   const clearMemory = () => {
     setValue('0')
   }
 
   const setOperation = (operation) => {
-    console.log(operation)
+    setOperator(operation)
+    setOldValue(value)
+    setValue('0')
   }
 
   const addDigit = (n) => {
@@ -21,9 +25,29 @@ function Calculator() {
     const clearDisplay = value === '0'
     const currentValue = clearDisplay ? '' : value
     const displayValue = currentValue + n
+    setValue(displayValue)
+  }
 
-    if(n !== '.') {
-      setValue(parseFloat(displayValue))
+  const calcuulate = () => {
+    switch (operator) {
+      case '+':
+        let sum = parseFloat(oldValue) + parseFloat(value)
+        setValue(sum.toString())
+        break;
+      case '-':
+        let sub = parseFloat(oldValue) - parseFloat(value)
+        setValue(sub.toString())
+        break;
+      case '*':
+        let multi = parseFloat(oldValue) * parseFloat(value)
+        setValue(multi.toString())
+        break;
+      case '/':
+        let div = parseFloat(oldValue) / parseFloat(value)
+        setValue(div.toString())
+        break;
+      default:
+        break;
     }
   }
 
@@ -46,7 +70,7 @@ function Calculator() {
       <Button label="+" operation click={setOperation} />
       <Button label="0" double click={addDigit} />
       <Button label="." click={addDigit} />
-      <Button label="=" operation click={setOperation} />
+      <Button label="=" operation click={calcuulate} />
     </div>
   )
 }
